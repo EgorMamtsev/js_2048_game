@@ -1,68 +1,45 @@
 'use strict';
-
-/**
- * This class represents the game.
- * Now it has a basic structure, that is needed for testing.
- * Feel free to add more props and methods if needed.
- */
-class Game {
-  /**
-   * Creates a new game instance.
-   *
-   * @param {number[][]} initialState
-   * The initial state of the board.
-   * @default
-   * [[0, 0, 0, 0],
-   *  [0, 0, 0, 0],
-   *  [0, 0, 0, 0],
-   *  [0, 0, 0, 0]]
-   *
-   * If passed, the board will be initialized with the provided
-   * initial state.
-   */
-  constructor(initialState) {
-    // eslint-disable-next-line no-console
-    console.log(initialState);
-  }
+/* eslint-disable no-useless-constructor */
+// прибери коментар і додай логіку конструктора далі
+export default class Game {
+  constructor(
+    initialState = [
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+    ],
+  ) {}
+  /* eslint-disable no-useless-constructor */
 
   moveLeft() {}
   moveRight() {}
   moveUp() {}
   moveDown() {}
 
-  /**
-   * @returns {number}
-   */
   getScore() {}
-
-  /**
-   * @returns {number[][]}
-   */
   getState() {}
-
-  /**
-   * Returns the current game status.
-   *
-   * @returns {string} One of: 'idle', 'playing', 'win', 'lose'
-   *
-   * `idle` - the game has not started yet (the initial state);
-   * `playing` - the game is in progress;
-   * `win` - the game is won;
-   * `lose` - the game is lost
-   */
   getStatus() {}
+  start() {
+    const fieldsCollection = document.querySelectorAll('td.field-cell');
 
-  /**
-   * Starts the game.
-   */
-  start() {}
+    fieldsCollection.forEach((cell) => {
+      cell.textContent = '';
+    });
 
-  /**
-   * Resets the game.
-   */
+    const randomIndexes = new Set();
+
+    while (randomIndexes.size < 2) {
+      randomIndexes.add(Math.floor(Math.random() * fieldsCollection.length));
+    }
+
+    const randomCells = [...randomIndexes].map(
+      (index) => fieldsCollection[index],
+    );
+
+    randomCells.forEach((cell) => {
+      cell.textContent = '2';
+    });
+  }
   restart() {}
-
-  // Add your own methods here
 }
-
-module.exports = Game;
