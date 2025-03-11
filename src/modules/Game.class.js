@@ -1,6 +1,5 @@
 'use strict';
-/* eslint-disable no-useless-constructor */
-// прибери коментар і додай логіку конструктора далі
+
 export default class Game {
   constructor(
     initialState = [
@@ -9,8 +8,9 @@ export default class Game {
       [0, 0, 0, 0],
       [0, 0, 0, 0],
     ],
-  ) {}
-  /* eslint-disable no-useless-constructor */
+  ) {
+    this.board = initialState; // зберігаємо початковий стан гри
+  }
 
   moveLeft() {}
   moveRight() {}
@@ -20,26 +20,24 @@ export default class Game {
   getScore() {}
   getState() {}
   getStatus() {}
-  start() {
-    const fieldsCollection = document.querySelectorAll('td.field-cell');
+  start() {}
+  restart() {}
 
-    fieldsCollection.forEach((cell) => {
-      cell.textContent = '';
-    });
+  getAllCoordinates() {
+    const coordinates = [];
 
-    const randomIndexes = new Set();
-
-    while (randomIndexes.size < 2) {
-      randomIndexes.add(Math.floor(Math.random() * fieldsCollection.length));
+    for (let row = 0; row < this.board.length; row++) {
+      for (let col = 0; col < this.board[row].length; col++) {
+        if (this.board[row][col] === 0) {
+          coordinates.push([row, col]);
+        }
+      }
     }
 
-    const randomCells = [...randomIndexes].map(
-      (index) => fieldsCollection[index],
-    );
-
-    randomCells.forEach((cell) => {
-      cell.textContent = '2';
-    });
+    return coordinates;
   }
-  restart() {}
+
+  addTwoAtStart() {
+    this.getAllCoordinates();
+  }
 }
