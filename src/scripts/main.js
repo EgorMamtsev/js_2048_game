@@ -25,5 +25,3 @@ document.addEventListener('keydown', (e) => {
     game.moveDown();
   }
 });
-
-game.render();

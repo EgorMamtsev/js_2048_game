@@ -41,9 +41,9 @@ export default class Game {
     }
 
     this.checkWin();
+    this.checkLoss();
     this.addNewCell();
     this.render();
-    this.checkLoss();
   }
   moveRight() {
     let scoreIncreases = 0;
@@ -72,9 +72,9 @@ export default class Game {
     }
 
     this.checkWin();
+    this.checkLoss();
     this.addNewCell();
     this.render();
-    this.checkLoss();
   }
   moveUp() {
     let scoreIncreases = 0;
@@ -109,9 +109,9 @@ export default class Game {
       this.getScore(scoreIncreases);
     }
     this.checkWin();
+    this.checkLoss();
     this.addNewCell();
     this.render();
-    this.checkLoss();
   }
   moveDown() {
     let scoreIncreases = 0;
@@ -150,9 +150,9 @@ export default class Game {
       this.getScore(scoreIncreases);
     }
     this.checkWin();
+    this.checkLoss();
     this.addNewCell();
     this.render();
-    this.checkLoss();
   }
 
   getScore(points) {
@@ -169,6 +169,7 @@ export default class Game {
   }
   start() {
     this.changeStartBtn();
+    this.hideStartMessage();
   }
   restart() {
     this.board = [
@@ -254,7 +255,9 @@ export default class Game {
     for (let row = 0; row < 4; row++) {
       for (let col = 0; col < 4; col++) {
         if (this.board[row][col] === 2048) {
-          alert('You Win');
+          const messageWin = document.querySelector('.message-win');
+
+          messageWin.classList.remove('hidden');
 
           return true;
         }
@@ -266,7 +269,9 @@ export default class Game {
 
   checkLoss() {
     if (!this.hasLevalMoves) {
-      alert('you lost');
+      const messageLoss = document.querySelector('.message-lose');
+
+      messageLoss.classList.remove('hidden');
     }
   }
 
@@ -348,9 +353,12 @@ export default class Game {
   }
 
   changeStartBtn() {
-    const startBt = document.querySelector('.start');
-
     if (this.getStatus() === 'Game not started') {
+      const startBt = document.querySelector('.start');
+
+      startBt.classList.add('restart');
+      startBt.classList.remove('start');
+
       this.status = 'On game';
       startBt.textContent = 'Restart';
       startBt.style.backgroundColor = '#f87474';
@@ -363,11 +371,7 @@ export default class Game {
     }
 
     if (this.getStatus() === 'On game') {
-      this.status = 'Game not started';
-      startBt.textContent = 'Start';
-      startBt.style.backgroundColor = 'green';
-
-      this.restart();
+      this.createMessage();
     }
   }
 
@@ -417,5 +421,95 @@ export default class Game {
           break;
       }
     });
+  }
+
+  hideStartMessage() {
+    const startMesage = document.querySelector('.message-start');
+
+    startMesage.classList.add('hidden');
+  }
+
+  createMessage() {
+    const body = document.querySelector('body');
+
+    const messageBody = document.createElement('div');
+    const messageLabel = document.createElement('h1');
+
+    messageLabel.textContent = 'Restart?';
+    messageLabel.style.color = '#7e7469';
+    messageLabel.style.backgroundColor = '#eae7d9';
+    messageBody.append(messageLabel);
+
+    const messageDescription = document.createElement('p');
+
+    messageDescription.textContent =
+      'Are you sure you want to start a new game?';
+    messageDescription.style.fontSize = '16px';
+    messageBody.append(messageDescription);
+
+    const confirmBtn = document.createElement('button');
+
+    confirmBtn.textContent = 'Restart';
+    messageBody.append(confirmBtn);
+
+    const cancelBtn = document.createElement('button');
+
+    cancelBtn.textContent = 'Cancel';
+    messageBody.append(cancelBtn);
+
+    messageBody.style.position = 'absolute';
+    messageBody.style.height = '200px';
+    messageBody.style.width = '350px';
+    messageBody.style.border = '1px solid black';
+    messageBody.style.backgroundColor = '#eae7d9';
+    messageBody.style.borderRadius = '40px';
+    messageBody.style.padding = '40px';
+
+    [...messageBody.children].forEach((child) => {
+      child.style.margin = '0 auto';
+      child.style.display = 'block';
+      child.style.textAlign = 'center';
+    });
+
+    messageDescription.style.margin = '0 0 30px 0';
+
+    confirmBtn.style.width = '300px';
+    confirmBtn.style.height = '40px';
+    confirmBtn.style.borderRadius = '10px';
+    confirmBtn.style.border = 'none';
+    confirmBtn.style.backgroundColor = '#998978';
+    confirmBtn.style.color = '#fcfbfb';
+    confirmBtn.style.fontSize = '20px';
+    confirmBtn.style.marginBottom = '15px';
+
+    cancelBtn.style.width = '300px';
+    cancelBtn.style.height = '40px';
+    cancelBtn.style.borderRadius = '10px';
+    cancelBtn.style.border = 'none';
+    cancelBtn.style.backgroundColor = '#998978';
+    cancelBtn.style.color = '#fcfbfb';
+    cancelBtn.style.fontSize = '20px';
+    cancelBtn.style.marginBottom = '15px';
+
+    confirmBtn.addEventListener('click', () => {
+      const restartBt = document.querySelector('.restart');
+
+      restartBt.classList.add('start');
+      restartBt.classList.remove('restart');
+
+      this.status = 'Game not started';
+      restartBt.textContent = 'Start';
+      restartBt.style.backgroundColor = 'green';
+
+      messageBody.remove();
+
+      this.restart();
+    });
+
+    cancelBtn.addEventListener('click', () => {
+      messageBody.remove();
+    });
+
+    body.append(messageBody);
   }
 }
