@@ -10,10 +10,14 @@ export default class Game {
     ],
   ) {
     this.board = initialState; // зберігаємо початковий стан гри
-    this.status = 'Game not started';
+    this.gameActive = false;
   }
 
   moveLeft() {
+    if (!this.getStatus()) {
+      return;
+    }
+
     let scoreIncreases = 0;
 
     for (let row = 0; row < this.board.length; row++) {
@@ -46,6 +50,10 @@ export default class Game {
     this.render();
   }
   moveRight() {
+    if (!this.getStatus()) {
+      return;
+    }
+
     let scoreIncreases = 0;
 
     for (let row = 0; row < this.board.length; row++) {
@@ -77,6 +85,10 @@ export default class Game {
     this.render();
   }
   moveUp() {
+    if (!this.getStatus()) {
+      return;
+    }
+
     let scoreIncreases = 0;
 
     for (let col = 0; col < 4; col++) {
@@ -114,14 +126,16 @@ export default class Game {
     this.render();
   }
   moveDown() {
+    if (!this.getStatus()) {
+      return;
+    }
+
     let scoreIncreases = 0;
 
     for (let col = 0; col < 4; col++) {
       let newCol = [];
 
       for (let row = 3; row >= 0; row--) {
-        // cпробуй збирати масив з зверху вниз а не знизу вверх
-        //  а перевірку на складання зроби з іншої сторони
         if (this.board[row][col] !== 0) {
           newCol.push(this.board[row][col]);
         }
@@ -136,6 +150,7 @@ export default class Game {
       }
 
       newCol = newCol.filter((num) => num !== 0);
+      newCol.reverse();
 
       while (newCol.length < 4) {
         newCol.unshift(0);
@@ -165,11 +180,12 @@ export default class Game {
     return this.board;
   }
   getStatus() {
-    return this.status;
+    return this.gameActive;
   }
   start() {
-    this.changeStartBtn();
     this.hideStartMessage();
+
+    this.changeStartBtn();
   }
   restart() {
     this.board = [
@@ -268,7 +284,7 @@ export default class Game {
   }
 
   checkLoss() {
-    if (!this.hasLevalMoves) {
+    if (!this.hasLevalMoves()) {
       const messageLoss = document.querySelector('.message-lose');
 
       messageLoss.classList.remove('hidden');
@@ -353,13 +369,13 @@ export default class Game {
   }
 
   changeStartBtn() {
-    if (this.getStatus() === 'Game not started') {
+    if (!this.getStatus()) {
       const startBt = document.querySelector('.start');
 
       startBt.classList.add('restart');
       startBt.classList.remove('start');
 
-      this.status = 'On game';
+      this.gameActive = true;
       startBt.textContent = 'Restart';
       startBt.style.backgroundColor = '#f87474';
       startBt.style.fontSize = '18px';
@@ -370,7 +386,7 @@ export default class Game {
       return;
     }
 
-    if (this.getStatus() === 'On game') {
+    if (this.getStatus()) {
       this.createMessage();
     }
   }
@@ -497,7 +513,7 @@ export default class Game {
       restartBt.classList.add('start');
       restartBt.classList.remove('restart');
 
-      this.status = 'Game not started';
+      this.gameActive = false;
       restartBt.textContent = 'Start';
       restartBt.style.backgroundColor = 'green';
 
