@@ -185,3 +185,55 @@ h1 {
   width: 100%;
   height: 150px;
 }
+
+@keyframes slide-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes slide-right {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-down {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.slide-left {
+  animation: slide-left 0.3s ease;
+}
+
+.slide-right {
+  animation: slide-right 0.3s ease;
+}
+
+.slide-up {
+  animation: slide-up 0.3s ease;
+}
+
+.slide-down {
+  animation: slide-down 0.3s ease;
+}
