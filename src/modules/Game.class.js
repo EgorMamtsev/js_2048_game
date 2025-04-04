@@ -13,40 +13,6 @@ export default class Game {
     this.gameActive = false;
   }
 
-  applyAnimationClass(row, col, direction) {
-    const cell = document.querySelector(
-      `.game-field tbody tr:nth-child(${row + 1}) td:nth-child(${col + 1})`,
-    );
-
-    if (!cell || Number(cell.textContent) === 0) {
-      return; // Пропустити порожні клітинки
-    }
-
-    let animationClass = '';
-
-    switch (direction) {
-      case 'left':
-        animationClass = 'slide-left';
-        break;
-      case 'right':
-        animationClass = 'slide-right';
-        break;
-      case 'up':
-        animationClass = 'slide-up';
-        break;
-      case 'down':
-        animationClass = 'slide-down';
-        break;
-    }
-
-    cell.classList.add(animationClass);
-
-    // Видаляємо клас анімації після завершення анімації
-    setTimeout(() => {
-      cell.classList.remove(animationClass);
-    }, 300);
-  }
-
   moveLeft() {
     if (!this.getStatus()) {
       return;
@@ -66,15 +32,6 @@ export default class Game {
       }
 
       newRow = newRow.filter((num) => num !== 0);
-
-      for (let col = 0; col < this.board[row].length; col++) {
-        if (
-          this.board[row][col] !== newRow[col] &&
-          this.board[row][col] !== 0
-        ) {
-          this.applyAnimationClass(row, col, 'left');
-        }
-      }
 
       while (newRow.length < 4) {
         newRow.push(0);
@@ -116,12 +73,6 @@ export default class Game {
         newRow.unshift(0);
       }
 
-      for (let col = 0; col < this.board[row].length; col++) {
-        if (this.board[row][col] !== newRow[col]) {
-          this.applyAnimationClass(row, col, 'right');
-        }
-      }
-
       this.board[row] = newRow;
     }
 
@@ -161,12 +112,6 @@ export default class Game {
 
       while (newCol.length < 4) {
         newCol.push(0);
-      }
-
-      for (let row = 0; row < 4; row++) {
-        if (this.board[row][col] !== newCol[row]) {
-          this.applyAnimationClass(row, col, 'up');
-        }
       }
 
       for (let row = 0; row < 4; row++) {
@@ -212,12 +157,6 @@ export default class Game {
 
       while (newCol.length < 4) {
         newCol.unshift(0);
-      }
-
-      for (let row = 0; row < 4; row++) {
-        if (this.board[row][col] !== newCol[row]) {
-          this.applyAnimationClass(row, col, 'down');
-        }
       }
 
       for (let row = 0; row < 4; row++) {
@@ -476,89 +415,6 @@ export default class Game {
 
     startMesage.classList.add('hidden');
   }
-
-  // createMessage() {
-  //   const body = document.querySelector('body');
-
-  //   const messageBody = document.createElement('div');
-  //   const messageLabel = document.createElement('h1');
-
-  //   messageLabel.textContent = 'Restart?';
-  //   messageLabel.style.color = '#7e7469';
-  //   messageLabel.style.backgroundColor = '#eae7d9';
-  //   messageBody.append(messageLabel);
-
-  //   const messageDescription = document.createElement('p');
-
-  //   messageDescription.textContent =
-  //     'Are you sure you want to start a new game?';
-  //   messageDescription.style.fontSize = '16px';
-  //   messageBody.append(messageDescription);
-
-  //   const confirmBtn = document.createElement('button');
-
-  //   confirmBtn.textContent = 'Restart';
-  //   messageBody.append(confirmBtn);
-
-  //   const cancelBtn = document.createElement('button');
-
-  //   cancelBtn.textContent = 'Cancel';
-  //   messageBody.append(cancelBtn);
-
-  //   messageBody.style.position = 'absolute';
-  //   messageBody.style.height = '200px';
-  //   messageBody.style.width = '350px';
-  //   messageBody.style.border = '1px solid black';
-  //   messageBody.style.backgroundColor = '#eae7d9';
-  //   messageBody.style.borderRadius = '40px';
-  //   messageBody.style.padding = '40px';
-
-  //   [...messageBody.children].forEach((child) => {
-  //     child.style.margin = '0 auto';
-  //     child.style.display = 'block';
-  //     child.style.textAlign = 'center';
-  //   });
-
-  //   messageDescription.style.margin = '0 0 30px 0';
-
-  //   confirmBtn.style.width = '300px';
-  //   confirmBtn.style.height = '40px';
-  //   confirmBtn.style.borderRadius = '10px';
-  //   confirmBtn.style.border = 'none';
-  //   confirmBtn.style.backgroundColor = '#998978';
-  //   confirmBtn.style.color = '#fcfbfb';
-  //   confirmBtn.style.fontSize = '20px';
-  //   confirmBtn.style.marginBottom = '15px';
-
-  //   cancelBtn.style.width = '300px';
-  //   cancelBtn.style.height = '40px';
-  //   cancelBtn.style.borderRadius = '10px';
-  //   cancelBtn.style.border = 'none';
-  //   cancelBtn.style.backgroundColor = '#998978';
-  //   cancelBtn.style.color = '#fcfbfb';
-  //   cancelBtn.style.fontSize = '20px';
-  //   cancelBtn.style.marginBottom = '15px';
-
-  //   confirmBtn.addEventListener('click', () => {
-  //     const restartBt = document.querySelector('.restart');
-
-  //     restartBt.classList.add('start');
-  //     restartBt.classList.remove('restart');
-
-  //     this.gameActive = false;
-  //     restartBt.textContent = 'Start';
-
-  //     messageBody.remove();
-
-  //     this.restart();
-  //   });
-
-  //   cancelBtn.addEventListener('click', () => {
-  //     messageBody.remove();
-  //   });
-
-  //   body.append(messageBody);
-  // }
 
   createMessage() {
     const body = document.querySelector('body');
