@@ -18,7 +18,7 @@ export default class Game {
       return;
     }
 
-    if (!this.canMoveLeft()) {
+    if (!this.canMoveLeft() && !this.checkLoss()) {
       return;
     }
 
@@ -58,7 +58,7 @@ export default class Game {
       return;
     }
 
-    if (!this.canMoveRight()) {
+    if (!this.canMoveRight() && !this.checkLoss()) {
       return;
     }
 
@@ -99,7 +99,7 @@ export default class Game {
       return;
     }
 
-    if (!this.canMoveUp()) {
+    if (!this.canMoveUp() && !this.checkLoss()) {
       return;
     }
 
@@ -147,7 +147,7 @@ export default class Game {
       return;
     }
 
-    if (!this.canMoveDown()) {
+    if (!this.canMoveDown() && !this.checkLoss()) {
       return;
     }
 
