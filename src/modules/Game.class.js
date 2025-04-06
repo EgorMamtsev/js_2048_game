@@ -8,6 +8,12 @@ export default class Game {
       [0, 0, 0, 0],
       [0, 0, 0, 0],
     ],
+    // initialState = [
+    //   [1, 2, 3, 4],
+    //   [5, 6, 0, 8],
+    //   [12, 11, 10, 9],
+    //   [13, 0, 15, 14],
+    // ],
   ) {
     this.board = initialState;
     this.gameActive = false;
@@ -18,8 +24,10 @@ export default class Game {
       return;
     }
 
-    if (!this.canMoveLeft() && !this.checkLoss()) {
+    if (!this.canMoveLeft() && this.hasLevalMoves()) {
       return;
+    } else {
+      this.checkLoss();
     }
 
     let scoreIncreases = 0;
@@ -49,7 +57,6 @@ export default class Game {
     }
 
     this.checkWin();
-    this.checkLoss();
     this.addNewCell();
     this.render();
   }
@@ -58,8 +65,10 @@ export default class Game {
       return;
     }
 
-    if (!this.canMoveRight() && !this.checkLoss()) {
+    if (!this.canMoveRight() && this.hasLevalMoves()) {
       return;
+    } else {
+      this.checkLoss();
     }
 
     let scoreIncreases = 0;
@@ -89,7 +98,6 @@ export default class Game {
     }
 
     this.checkWin();
-    this.checkLoss();
     this.addNewCell();
     this.render();
   }
@@ -99,8 +107,10 @@ export default class Game {
       return;
     }
 
-    if (!this.canMoveUp() && !this.checkLoss()) {
+    if (!this.canMoveUp() && this.hasLevalMoves()) {
       return;
+    } else {
+      this.checkLoss();
     }
 
     let scoreIncreases = 0;
@@ -137,7 +147,6 @@ export default class Game {
       this.getScore(scoreIncreases);
     }
     this.checkWin();
-    this.checkLoss();
     this.addNewCell();
     this.render();
   }
@@ -147,8 +156,10 @@ export default class Game {
       return;
     }
 
-    if (!this.canMoveDown() && !this.checkLoss()) {
+    if (!this.canMoveDown() && this.hasLevalMoves()) {
       return;
+    } else {
+      this.checkLoss();
     }
 
     let scoreIncreases = 0;
@@ -186,7 +197,6 @@ export default class Game {
       this.getScore(scoreIncreases);
     }
     this.checkWin();
-    this.checkLoss();
     this.addNewCell();
     this.render();
   }
@@ -411,13 +421,12 @@ export default class Game {
     cells.forEach((cell) => {
       const value = Number(cell.textContent);
 
-      // Видаляємо всі класи, крім базового field-cell
       cell.className = 'field-cell';
 
       if (value !== 0) {
         cell.classList.add(`field-cell--${value}`);
       } else {
-        cell.textContent = ''; // Очищаємо текст, якщо клітинка порожня
+        cell.textContent = '';
       }
     });
   }
@@ -452,12 +461,6 @@ export default class Game {
     confirmBtn.textContent = 'Restart';
     messageBody.append(confirmBtn);
 
-    const cancelBtn = document.createElement('button');
-
-    cancelBtn.classList.add('button-cancel');
-    cancelBtn.textContent = 'Cancel';
-    messageBody.append(cancelBtn);
-
     confirmBtn.addEventListener('click', () => {
       messageBody.remove();
 
@@ -466,11 +469,17 @@ export default class Game {
       this.render();
     });
 
-    cancelBtn.addEventListener('click', () => {
-      messageBody.remove();
-    });
-
     if (value === 'restart') {
+      const cancelBtn = document.createElement('button');
+
+      cancelBtn.classList.add('button-cancel');
+      cancelBtn.textContent = 'Cancel';
+      messageBody.append(cancelBtn);
+
+      cancelBtn.addEventListener('click', () => {
+        messageBody.remove();
+      });
+
       messageLabel.textContent = 'Restart?';
 
       messageText.textContent =
