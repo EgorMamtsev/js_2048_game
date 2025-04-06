@@ -9,12 +9,16 @@ export default class Game {
       [0, 0, 0, 0],
     ],
   ) {
-    this.board = initialState; // зберігаємо початковий стан гри
+    this.board = initialState;
     this.gameActive = false;
   }
 
   moveLeft() {
     if (!this.getStatus()) {
+      return;
+    }
+
+    if (!this.canMoveLeft()) {
       return;
     }
 
@@ -51,6 +55,10 @@ export default class Game {
   }
   moveRight() {
     if (!this.getStatus()) {
+      return;
+    }
+
+    if (!this.canMoveRight()) {
       return;
     }
 
@@ -91,10 +99,14 @@ export default class Game {
       return;
     }
 
+    if (!this.canMoveUp()) {
+      return;
+    }
+
     let scoreIncreases = 0;
 
     for (let col = 0; col < 4; col++) {
-      const newCol = [];
+      let newCol = [];
 
       for (let row = 0; row < 4; row++) {
         if (this.board[row][col] !== 0) {
@@ -109,6 +121,8 @@ export default class Game {
           scoreIncreases += newCol[i];
         }
       }
+
+      newCol = newCol.filter((num) => num !== 0);
 
       while (newCol.length < 4) {
         newCol.push(0);
@@ -130,6 +144,10 @@ export default class Game {
 
   moveDown() {
     if (!this.getStatus()) {
+      return;
+    }
+
+    if (!this.canMoveDown()) {
       return;
     }
 
@@ -186,8 +204,6 @@ export default class Game {
     return this.gameActive;
   }
   start() {
-    this.hideStartMessage();
-
     this.changeStartBtn();
   }
   restart() {
@@ -274,9 +290,7 @@ export default class Game {
     for (let row = 0; row < 4; row++) {
       for (let col = 0; col < 4; col++) {
         if (this.board[row][col] === 2048) {
-          const messageWin = document.querySelector('.message-win');
-
-          messageWin.classList.remove('hidden');
+          this.createMessage('win');
 
           return true;
         }
@@ -288,9 +302,7 @@ export default class Game {
 
   checkLoss() {
     if (!this.hasLevalMoves()) {
-      const messageLoss = document.querySelector('.message-lose');
-
-      messageLoss.classList.remove('hidden');
+      this.createMessage('loss');
     }
   }
 
@@ -389,7 +401,7 @@ export default class Game {
     }
 
     if (this.getStatus()) {
-      this.createMessage();
+      this.createMessage('restart');
     }
   }
 
@@ -410,13 +422,7 @@ export default class Game {
     });
   }
 
-  hideStartMessage() {
-    const startMesage = document.querySelector('.message-start');
-
-    startMesage.classList.add('hidden');
-  }
-
-  createMessage() {
+  createMessage(value) {
     const body = document.querySelector('body');
     const messageWrapper = document.createElement('div');
 
@@ -431,16 +437,12 @@ export default class Game {
     const messageLabel = document.createElement('div');
 
     messageLabel.classList.add('message-label');
-    messageLabel.textContent = 'Restart?';
 
     messageBody.append(messageLabel);
 
     const messageText = document.createElement('div');
 
     messageText.classList.add('message-text');
-
-    messageText.textContent =
-      'Are you sure you want to start a new game? All progress will be lost.';
 
     messageBody.append(messageText);
 
@@ -457,22 +459,42 @@ export default class Game {
     messageBody.append(cancelBtn);
 
     confirmBtn.addEventListener('click', () => {
-      const restartBt = document.querySelector('.restart');
-
-      restartBt.classList.add('start');
-      restartBt.classList.remove('restart');
-
-      this.gameActive = false;
-      restartBt.textContent = 'Start';
-
       messageBody.remove();
 
       this.restart();
+      this.addTwoRandomCells();
+      this.render();
     });
 
     cancelBtn.addEventListener('click', () => {
       messageBody.remove();
     });
+
+    if (value === 'restart') {
+      messageLabel.textContent = 'Restart?';
+
+      messageText.textContent =
+        'Are you sure you want to start a new game? All progress will be lost.';
+      this.addTwoRandomCells();
+    }
+
+    if (value === 'loss') {
+      messageLabel.textContent = 'You lost';
+
+      messageText.textContent =
+        'There is no awaliable moves left. Do you want start new game?';
+
+      confirmBtn.textContent = 'New Game';
+    }
+
+    if (value === 'win') {
+      messageLabel.textContent = 'Congratulations! You won';
+
+      messageText.textContent =
+        'You got 2048, champion! Do you want try again?';
+
+      confirmBtn.textContent = 'New Game';
+    }
 
     body.append(messageWrapper);
   }
