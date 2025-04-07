@@ -8,12 +8,6 @@ export default class Game {
       [0, 0, 0, 0],
       [0, 0, 0, 0],
     ],
-    // initialState = [
-    //   [1, 2, 3, 4],
-    //   [5, 6, 0, 8],
-    //   [12, 11, 10, 9],
-    //   [13, 0, 15, 14],
-    // ],
   ) {
     this.board = initialState;
     this.gameActive = false;
@@ -412,6 +406,7 @@ export default class Game {
 
     if (this.getStatus()) {
       this.createMessage('restart');
+      this.gameActive = false;
     }
   }
 
@@ -432,6 +427,12 @@ export default class Game {
   }
 
   createMessage(value) {
+    const check = document.querySelector('.message-body');
+
+    if (check) {
+      return;
+    }
+
     const body = document.querySelector('body');
     const messageWrapper = document.createElement('div');
 
@@ -462,7 +463,8 @@ export default class Game {
     messageBody.append(confirmBtn);
 
     confirmBtn.addEventListener('click', () => {
-      messageBody.remove();
+      messageWrapper.remove();
+      this.gameActive = true;
 
       this.restart();
       this.addTwoRandomCells();
@@ -477,7 +479,8 @@ export default class Game {
       messageBody.append(cancelBtn);
 
       cancelBtn.addEventListener('click', () => {
-        messageBody.remove();
+        messageWrapper.remove();
+        this.gameActive = true;
       });
 
       messageLabel.textContent = 'Restart?';
